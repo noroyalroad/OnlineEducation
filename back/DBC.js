@@ -1,7 +1,7 @@
 const dbconfig = require("./config/dbconfig.json");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
-const conn = mysql.createPool({
+const pool = mysql.createPool({
   host: dbconfig.host,
   user: dbconfig.user,
   port: dbconfig.port,
@@ -10,4 +10,4 @@ const conn = mysql.createPool({
   connectionLimit: 5,
 });
 
-module.exports = conn;
+module.exports = pool;
