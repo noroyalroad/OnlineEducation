@@ -4,6 +4,7 @@ const port = 4000;
 const test = require("./Router/testRouter");
 const main = require("./Router/mainRouter");
 const auth = require("./Router/authRouter");
+const lecuture = require("./Router/lecturesRouter");
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -11,6 +12,7 @@ app.use(bodyParser.json());
 app.use("/test", test);
 app.use("/api", main);
 app.use("/api/auth", auth);
+app.use("/api/lectures", lecuture);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
