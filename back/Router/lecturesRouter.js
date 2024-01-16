@@ -108,8 +108,66 @@ router.post("/ques", async (req, res) => {
     }
   });
 });
-module.exports = router;
-//수강신청
-//결제
+
+// 수강신청
+router.post("/enroll", async (req, res) => {
+  console.log(req.body);
+  const { UserID, LectureID } = req.body;
+
+  let sql = `INSERT INTO Enrollments(UserID, LectureID)
+  VALUES
+  ( ?, ?);`;
+  const values = [UserID, LectureID];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      res.send({ success: true });
+    }
+  });
+});
+
 // 강의후기
-// 마이페이지 수정
+
+router.post("/review", async (req, res) => {
+  console.log(req.body);
+  const { UserID, LectureID, Review } = req.body;
+
+  let sql = `INSERT INTO Review(UserID, LectureID, Review)
+  VALUES
+  ( ?, ?, ?);`;
+  const values = [UserID, LectureID, Review];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      res.send({ success: true });
+    }
+  });
+});
+
+// 강의후기 가져오기
+
+router.get("/review/:id", async (req, res) => {
+  console.log(req.params.id);
+
+  let sql = `SELECT * FROM Review  WHERE LectureID = ${req.params.id};`;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log(result);
+      res.send(result);
+    }
+  });
+});
+
+module.exports = router;
+
+//결제

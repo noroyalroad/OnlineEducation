@@ -17,19 +17,6 @@ router.get("/", (req, res) => {
   });
 });
 
-// router.get("/", (req, res) => {
-//   req.dbConnection
-//     .query("SELECT * FROM Lectures ORDER BY LectureID DESC;")
-//     .then((rows) => {
-//       console.log("Data retrieved:", rows);
-//       res.send(rows);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       res.status(500).send("Internal Server Error");
-//     });
-// });
-
 router.get("/hotlist", (req, res) => {
   db.query(
     `SELECT l.*, COUNT(p.PayID) as TotalPayments FROM Lectures l

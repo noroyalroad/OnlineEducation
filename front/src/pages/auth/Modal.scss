@@ -1,0 +1,126 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #333;
+}
+
+
+
+.login-box {
+  position: relative;
+  margin: 10px auto;
+  width: 500px;
+  height: 380px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 3px;
+  box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.33);
+}
+
+.lb-header {
+  position: relative;
+  color: #00415d;
+  margin: 5px 5px 10px 5px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  height: 28px;
+
+  a {
+    margin: 0 25px;
+    padding: 0 20px;
+    text-decoration: none;
+    color: #666;
+    font-weight: bold;
+    font-size: 15px;
+    transition: all 0.1s linear;
+
+    &.active {
+      color: #029f5b;
+      font-size: 18px;
+    }
+  }
+}
+
+
+
+.email-login{
+  position: relative;
+  float: left;
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.u-form-group {
+  width: 100%;
+  margin-bottom: 10px;
+
+  input[type="email"],
+  input[type="password"] {
+    width: calc(50% - 22px);
+    height: 45px;
+    outline: none;
+    border: 1px solid #ddd;
+    padding: 0 10px;
+    border-radius: 2px;
+    color: #333;
+    font-size: 0.8rem;
+    transition: all 0.1s linear;
+
+    &:focus {
+      border-color: #358efb;
+    }
+  }
+
+  button {
+    width: 50%;
+    background-color: #1CB94E;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 14px 0;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+}
+.kako button img {
+  width: 45px; /* 원하는 크기로 조정 */
+  height: 45px; /* 원하는 크기로 조정 */
+}
+
+.forgot-password {
+  width: 50%;
+  text-align: left;
+  text-decoration: underline;
+  color: #888;
+  font-size: 0.75rem;
+}

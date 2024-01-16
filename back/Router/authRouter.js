@@ -67,7 +67,7 @@ router.post("/login", (req, res) => {
                 expiresIn: "1h",
               }
             );
-            res.cookie("token", token);
+            res.cookie("x_auth", token);
             res.send({ success: true });
           }
         });
@@ -88,10 +88,10 @@ router.get("/userinfo", auth, (req, res) => {
 // 사용자 정보 수정
 
 router.post("/mypage/change", (req, res) => {
-  const { Email, Password, UserCellphone, Nickname } = req.body;
+  const { UserCellphone, Nickname, UserID } = req.body;
   console.log(req.body);
-  const sql = "UPDATE Users SET Password = ?, UserCellphone = ?, Nickname = ? WHERE Email = ?";
-  const values = [Password, UserCellphone, Nickname, Email];
+  const sql = "UPDATE Users SET  UserCellphone = ?, Nickname = ? WHERE UserID = ?";
+  const values = [UserCellphone, Nickname, UserID];
   db.query(sql, values, (err, result) => {
     if (err) {
       console.error(err);
