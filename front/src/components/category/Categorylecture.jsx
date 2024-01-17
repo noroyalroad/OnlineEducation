@@ -1,13 +1,17 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Newlecture from "../components/new/Newlecture";
+import React from "react";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 
-const Home = () => {
-  // 선택한 강의 정보 출력 함수
+import CardMedia from "@mui/material/CardMedia";
 
-  const [selectedCourse, setSelectedCourse] = useState(null);
+import { Button, CardActionArea, CardActions } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import Selectlecture from "./Select";
+
+const Categorylecture = () => {
   const nav = useNavigate();
-
   const courses = [
     {
       id: 1,
@@ -91,14 +95,38 @@ const Home = () => {
     },
     // 추가 강의 정보를 계속해서 넣어주실 수 있습니다.
   ];
-
-  // 선택한 강의 정보 출력 함수
-
   return (
-    <div className="home">
-      <Newlecture lecture={courses} />
-    </div>
+    <Grid className="gridlecture" container spacing={2}>
+      {courses.map((card, index) => (
+        <Grid item key={index} xs={12} sm={6} md={4} lg={3} xl={2}>
+          <Card sx={{ maxWidth: 345 }}>
+            <CardActionArea>
+              <CardMedia component="img" height="140" image={card.image} alt="green iguana" />
+              <CardContent>
+                <Typography variant="body2" component="div">
+                  {card.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {card.description}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            <CardActions>
+              <Button
+                size="small"
+                color="primary"
+                onClick={() => {
+                  nav("/detailleture");
+                }}
+              >
+                Learn
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
   );
 };
 
-export default Home;
+export default Categorylecture;

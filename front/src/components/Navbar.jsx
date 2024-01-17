@@ -1,52 +1,217 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Modal from "../pages/auth/Modal";
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import Button from "@mui/material/Button";
+import MenuIcon from "@mui/icons-material/Menu";
+import { styled, alpha } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
 
-const Navbar = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import SearchIcon from "@mui/icons-material/Search";
+import AdbIcon from "@mui/icons-material/Adb";
+import InputBase from "@mui/material/InputBase";
+import { useNavigate } from "react-router-dom";
+
+const pages = ["Front", "Back", "DB"];
+const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: theme.spacing(1), // 왼쪽 여백 조절
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(2), // 미디엄 이상 화면에서의 여백 조절
+    width: "auto",
+  },
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  width: "100%",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
+}));
+
+function Navbar() {
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
   const nav = useNavigate();
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
   };
 
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown); // 드랍다운 메뉴 표시 여부 변경
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
   };
+  // 네브바 백그라운 색상 흰 색으로 변경
+
   return (
-    <div className="navbar">
-      <div className="container">
-        <div className="logo" onClick={() => nav("/")}>
-          MOBLE (주)모블
-        </div>
-        <div className="links">
-          <h6 className="link" onClick={openModal}>
-            로그인
-          </h6>
-          <Modal isOpen={isModalOpen} onClose={closeModal} />
+    <AppBar position="static" sx={{ backgroundColor: "peachpuff", boxShadow: "none" }}>
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="#app-bar-with-responsive-menu"
+            sx={{
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              color: "black",
+              textDecoration: "none",
+            }}
+          >
+            LOGO
+          </Typography>
 
-          {/* 유저 이미지 또는 아이콘이 표시되어야 합니다. */}
-          <div className="link">
-            <img src="user-image.jpg" alt="User" onClick={toggleDropdown} />
-            {showDropdown && (
-              <div className="dropdown-menu">
-                <ul>
-                  <li>마이 페이지</li>
-                  <li>설정</li>
-                  <li>로그아웃</li>
-                </ul>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+            <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" onClick={handleOpenNavMenu} color="inherit">
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: "block", md: "none" },
+              }}
+            >
+              {pages.map((page) => (
+                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            href="#app-bar-with-responsive-menu"
+            sx={{
+              mr: 2,
+              display: { xs: "flex", md: "none" },
+              flexGrow: 1,
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              color: "black",
+              textDecoration: "none",
+            }}
+          >
+            LOGO
+          </Typography>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {pages.map((page) => (
+              <Button
+                key={page}
+                onClick={() => {
+                  nav("/category");
+                }}
+                sx={{ my: 2, color: "black", display: "block" }}
+              >
+                {page}
+              </Button>
+            ))}
+          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
+            </Search>
+          </Box>
+
+          <Box>
+            <Button color="inherit">Login</Button>
+          </Box>
+
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: "45px" }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{setting}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
-};
-
+}
 export default Navbar;

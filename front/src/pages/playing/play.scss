@@ -1,0 +1,30 @@
+.course-detail{
+  display: flex;
+
+  .header{
+    display: flex;
+    width: auto;
+    flex-direction: column;
+  }
+
+  .content-container{
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+
+
+  
+}
+.tttoc{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: -15px 0px 0px 30px;
+  
+}
+.writecomment{
+  display: flex;
+}

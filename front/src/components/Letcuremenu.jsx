@@ -1,62 +1,62 @@
-import React, { useState } from "react";
+import * as React from "react";
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
-const Letcuremenu = () => {
-  const [activeMenu, setActiveMenu] = useState("info");
-
-  // 예시로 첫 번째 강의를 사용
-
-  const showInfo = () => {
-    setActiveMenu("info");
-  };
-
-  const showOutline = () => {
-    setActiveMenu("outline");
-  };
-
-  const showQuestion = () => {
-    setActiveMenu("question");
-  };
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
 
   return (
-    <div className="course-detail">
-      <div className="menu">
-        <button onClick={showInfo} className={activeMenu === "info" ? "active" : ""}>
-          정보
-        </button>
-        <button onClick={showOutline} className={activeMenu === "outline" ? "active" : ""}>
-          목차
-        </button>
-        <button onClick={showQuestion} className={activeMenu === "question" ? "active" : ""}>
-          질문
-        </button>
-      </div>
-
-      {activeMenu === "info" && (
-        <div className="info-section">
-          <h2 className="section-title">강의 정보</h2>
-          <p>ㄹㄹㄹㄹㄹ</p>
-        </div>
-      )}
-
-      {activeMenu === "outline" && (
-        <div className="outline-section">
-          <h2 className="section-title">강의 목차</h2>
-          <ol>
-            <li>세션 1: 시작하기</li>
-            <li>세션 2: 중간 단계</li>
-            <li>세션 3: 고급 주제</li>
-          </ol>
-        </div>
-      )}
-
-      {activeMenu === "question" && (
-        <div className="question-section">
-          <h2 className="section-title">질문</h2>
-          <p>질문이 없습니다.</p>
-        </div>
+    <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
       )}
     </div>
   );
+}
+
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
 };
 
-export default Letcuremenu;
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
+export default function Lecturemenu() {
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <Box sx={{ width: "100%" }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs value={value} onChange={handleChange} textColor="black" aria-label="basic tabs example">
+          <Tab label="강의정보" {...a11yProps(0)} />
+          <Tab label="목차" {...a11yProps(1)} />
+          <Tab label="질문하기" {...a11yProps(2)} />
+        </Tabs>
+      </Box>
+      <CustomTabPanel value={value} index={0}>
+        강의정보
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+        목차
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        질문하기
+      </CustomTabPanel>
+    </Box>
+  );
+}

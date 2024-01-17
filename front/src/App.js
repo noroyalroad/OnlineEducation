@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider, Route, Outlet } from "react-router
 
 import Login from "./pages/Login";
 import Write from "./pages/Write";
-import Home from "./pages/Home";
+
 import Single from "./pages/Single";
 import Search from "./pages/Search";
 import Courses from "./pages/Courses";
@@ -18,6 +18,10 @@ import Footer from "./components/Footer";
 import Resgister1 from "./pages/auth/Resgister1";
 import DetailLeture from "./components/DetailLeture";
 import PaymentPage from "./pages/pay/Pay";
+import Home from "./pages/Home";
+import MoveCategory from "./components/category/MoveCategory";
+import Lectureplay from "./pages/playing/Lectureplay";
+import Mainplaying from "./pages/playing/Mainplaying";
 
 const Layout = () => {
   return (
@@ -54,6 +58,15 @@ const router = createBrowserRouter([
         path: "/courses",
         element: <Courses />,
       },
+      {
+        path: "/category",
+        element: <MoveCategory />,
+      },
+      {
+        path: "/playlecture",
+        element: <Mainplaying />,
+      },
+
       {
         path: "/profile",
         element: <Profile />,
