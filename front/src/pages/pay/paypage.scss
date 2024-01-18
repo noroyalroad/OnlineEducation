@@ -1,64 +1,44 @@
-.payment-container {
+.payment-container{
+
   display: flex;
-  justify-content: space-around;
-  max-width: 800px;
-  margin: auto;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 50px;
 
-  .item-details {
-    width: 45%;
-    text-align: center;
-    padding: 20px;
-
-    h2 {
-      margin-bottom: 10px;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-      margin-bottom: 10px;
-    }
-
-    div {
-      h3 {
-        margin-bottom: 5px;
+  .payment-form{
+    .payinfo{
+      display: flex;
+      flex-direction: column;
+      
+      .info{
+        width: 200px;
+        height: 30px;
+        margin-top: 30px;
+        
+        
       }
-
-      p {
-        margin: 0;
+    }
+    .payinfo2{
+      display: flex;
+      flex-direction: column;
+      h2{
+        margin-top: 30px;
+      }
+      .info{
+        width: 200px;
+        height: 30px;
+        margin-top: 30px;
+        
+        
       }
     }
   }
-
-  .payment-form {
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-
-    h2 {
-      margin-bottom: 15px;
+  .item-details{
+    margin-right:50px ;
+    .paymethod{
+      display: flex;
+      flex-direction: column;
     }
-
-    label {
-      margin-bottom: 5px;
-    }
-
-    input {
-      padding: 8px;
-      margin-bottom: 10px;
-    }
-
-    .paymethod {
-      h2 {
-        margin-bottom: 10px;
-      }
-
-      label {
-        margin-bottom: 5px;
-      }
-    }
-
     button {
       width: 100%;
       padding: 10px;
@@ -68,6 +48,7 @@
       border-radius: 4px;
       cursor: pointer;
       font-size: 16px;
+      margin-top: 80px;
 
       &:hover {
         background-color: #45a049;

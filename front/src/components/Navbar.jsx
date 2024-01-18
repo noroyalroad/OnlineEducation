@@ -17,9 +17,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import AdbIcon from "@mui/icons-material/Adb";
 import InputBase from "@mui/material/InputBase";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Login1 from "../pages/auth/Login1";
 
 const pages = ["Front", "Back", "DB"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["내정보", "수강 중인 강의", "Logout"];
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -65,7 +67,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const nav = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -81,6 +82,25 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const [search, setsearch] = useState("");
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    console.log(search);
+  };
+  const nav = useNavigate();
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   // 네브바 백그라운 색상 흰 색으로 변경
 
   return (
@@ -92,7 +112,7 @@ function Navbar() {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            onClick={() => nav("/")}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -105,7 +125,6 @@ function Navbar() {
           >
             LOGO
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" onClick={handleOpenNavMenu} color="inherit">
               <MenuIcon />
@@ -159,7 +178,7 @@ function Navbar() {
               <Button
                 key={page}
                 onClick={() => {
-                  nav("/category");
+                  nav(`/category/${page}`);
                 }}
                 sx={{ my: 2, color: "black", display: "block" }}
               >
@@ -168,16 +187,31 @@ function Navbar() {
             ))}
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Search>
+            <Search onSubmit={handleSearch}>
               <SearchIconWrapper>
                 <SearchIcon />
               </SearchIconWrapper>
-              <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+                value={search}
+                onChange={(e) => {
+                  setsearch(e.target.value);
+                }}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    nav(`search/?search=${search}`);
+                    setsearch("");
+                  }
+                }}
+              />
             </Search>
           </Box>
-
           <Box>
-            <Button color="inherit">Login</Button>
+            <Button color="inherit" onClick={openModal}>
+              Login
+            </Button>
+            <Login1 isOpen={isModalOpen} onClose={closeModal} />
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
@@ -203,7 +237,12 @@ function Navbar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => {
+                    nav(`/mypage/${setting}`);
+                  }}
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

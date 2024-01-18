@@ -2,12 +2,18 @@ import React from "react";
 import Selectlecture from "./Select";
 import Categorylecture from "./Categorylecture";
 import Paging from "../paging/Paging";
+import { useParams } from "react-router-dom";
 
 const MoveCategory = () => {
+  const { category } = useParams();
+
   return (
     <div className="movecategory">
-      <Selectlecture />
-      <h2>카테고리</h2>
+      <div className="header">
+        <h2 className="cate">{category}</h2>
+        <Selectlecture />
+      </div>
+
       <hr></hr>
       <Categorylecture />
       <Paging />

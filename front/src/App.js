@@ -22,6 +22,8 @@ import Home from "./pages/Home";
 import MoveCategory from "./components/category/MoveCategory";
 import Lectureplay from "./pages/playing/Lectureplay";
 import Mainplaying from "./pages/playing/Mainplaying";
+import MyPage from "./pages/mypage/Mypage";
+import Searchre from "./pages/search/Searchre";
 
 const Layout = () => {
   return (
@@ -43,6 +45,10 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: "/mypage/:vvv",
+        element: <MyPage />,
+      },
+      {
         path: "/post/:id",
         element: <Single />,
       },
@@ -52,14 +58,18 @@ const router = createBrowserRouter([
       },
       {
         path: "/search",
-        element: <Search />,
+        element: <Searchre />,
       },
       {
         path: "/courses",
         element: <Courses />,
       },
       {
-        path: "/category",
+        path: "/search/?search=",
+        element: <Searchre />,
+      },
+      {
+        path: "/category/:category",
         element: <MoveCategory />,
       },
       {

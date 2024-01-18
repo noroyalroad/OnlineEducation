@@ -3,7 +3,7 @@ import "../auth/Modal.scss";
 import kakao from "../../assets/73c891243e7e474e8d81c200967bb14d.jpeg";
 import { useNavigate } from "react-router-dom";
 
-const Modal = ({ isOpen, onClose }) => {
+const Login1 = ({ isOpen, onClose }) => {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -57,4 +57,4 @@ const Modal = ({ isOpen, onClose }) => {
   );
 };
 
-export default Modal;
+export default Login1;

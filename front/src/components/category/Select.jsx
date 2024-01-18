@@ -4,7 +4,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import styles from "./catgory.scss";
+import "./catgory.scss";
 const Selectlecture = () => {
   const [menu, setmenu] = useState("");
 
@@ -14,8 +14,8 @@ const Selectlecture = () => {
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">강의출력</InputLabel>
           <Select labelId="demo-simple-select-label" id="demo-simple-select">
-            <MenuItem value={10}>최신순</MenuItem>
-            <MenuItem value={20}>인기순</MenuItem>
+            <MenuItem value={1}>최신순</MenuItem>
+            <MenuItem value={0}>인기순</MenuItem>
           </Select>
         </FormControl>
       </Box>

@@ -9,6 +9,7 @@ import CardMedia from "@mui/material/CardMedia";
 import { Button, CardActionArea, CardActions } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Selectlecture from "./Select";
+import Progress from "../progress/Progress";
 
 const Categorylecture = () => {
   const nav = useNavigate();
@@ -109,6 +110,7 @@ const Categorylecture = () => {
                 <Typography variant="body2" color="text.secondary">
                   {card.description}
                 </Typography>
+                <Progress />
               </CardContent>
             </CardActionArea>
             <CardActions>

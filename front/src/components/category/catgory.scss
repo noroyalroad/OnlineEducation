@@ -1,28 +1,43 @@
 .movecategory {
   display: flex;
   flex-direction: column;
+  hr{
+    margin-left: 50px;
+    border: 1px solid black; 
+    
+    margin-top: 20px;
+    margin-left: 15px;
+    width: 100%;
+  }
   
 
   .select {
     width: 25px;
     height: 25px;
-    margin: 18px;
+     // Add spacing between select and heading
     
     
+    margin-right: 100px;
+    margin-top: 20px;
   }
-
-  h2 {
+  .header{
+    display: flex;
+    justify-content:space-between;
     width: auto;
-    height: 25px;
-    margin :20px; // Add spacing between select and heading
+   .cate {
+      width: auto;
+      height: 25px;
+      margin-top :30px;
+      margin-left: 20px; // Add spacing between select and heading
+    }
+    
+   
+    
   }
 
-  hr {
-    border: 1px solid black; 
-    
-    margin: 20px 0;
-    width: 100%;
-  }
+ 
+
+  
 
   .paging {
     margin :20px; // Push the paging component to the bottom

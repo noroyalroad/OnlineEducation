@@ -1,0 +1,65 @@
+// myPage.scss
+
+$primaryColor: #4CAF50;      // 라이트 그린
+$backgroundColor: #f4f4f4;  // 백그라운드 색상
+$textColor: #333;           // 텍스트 색상
+
+.my-page-container {
+  font-family: 'Arial', sans-serif;
+  padding: 20px;
+  background-color: $backgroundColor;
+  color: $textColor;
+  text-align: left;
+
+  h1 {
+    color: $primaryColor;
+  }
+  
+
+
+  .user-info {
+    margin-top: 20px;
+    
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+
+    .change{
+      margin :30px;
+      width: 40px;
+      height: 40px;
+
+    }
+
+    h2 {
+      color: black;
+    }
+
+    p {
+      margin: 8px 0;
+    }
+  }
+
+  .user-info-edit {
+    margin-top: 20px;
+    
+    padding: 15px;
+    border-radius: 5px;
+
+    h2 {
+      color: black;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0;
+
+      input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid black;
+        border-radius: 3px;
+      }
+    }
+  }
+}
