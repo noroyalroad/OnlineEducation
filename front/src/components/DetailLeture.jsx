@@ -17,11 +17,14 @@ const DetailLeture = ({ lecture }) => {
           수강신청
         </Button>
       </div>
-      <img
-        className="course-image"
-        src="https://storage.googleapis.com/static.fastcampus.co.kr/prod/uploads/202302/061341-973/%EC%B4%88%EA%B2%A9%EC%B0%A8---%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C.png"
-        alt="Course Image"
-      />
+      <hr></hr>
+      <div className="course-image">
+        <img
+          src="https://storage.googleapis.com/static.fastcampus.co.kr/prod/uploads/202302/061341-973/%EC%B4%88%EA%B2%A9%EC%B0%A8---%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C.png"
+          alt="Course Image"
+        />
+      </div>
+
       <div className="course-info"></div>
 
       <Lecturemenu />

@@ -12,7 +12,7 @@ const Selectlecture = () => {
     <div className="select">
       <Box className="box" sx={{ minWidth: 120 }}>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">강의출력</InputLabel>
+          <InputLabel id="demo-simple-select-label">강의목록</InputLabel>
           <Select labelId="demo-simple-select-label" id="demo-simple-select">
             <MenuItem value={1}>최신순</MenuItem>
             <MenuItem value={0}>인기순</MenuItem>

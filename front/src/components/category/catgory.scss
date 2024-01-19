@@ -1,6 +1,7 @@
 .movecategory {
   display: flex;
   flex-direction: column;
+  width: 1240px;
   hr{
     margin-left: 50px;
     border: 1px solid black; 
@@ -24,12 +25,18 @@
     display: flex;
     justify-content:space-between;
     width: auto;
+    margin-top: 60px;
+    
    .cate {
       width: auto;
       height: 25px;
       margin-top :30px;
       margin-left: 20px; // Add spacing between select and heading
     }
+    .selectbox{
+      margin-bottom: 20px;
+    }
+    
     
    
     

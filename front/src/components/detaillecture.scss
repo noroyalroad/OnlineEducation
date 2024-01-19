@@ -1,12 +1,17 @@
 .course-detail {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; // 추가된 부분
+  
+  // justify-content: space-between;
+  margin-top:100px ;
+  width: 1240px; // 추가된 부분
+  
 
   .header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    
     margin-bottom: 20px;
     .lecturetitle {
       font-size: 24px;
@@ -29,10 +34,22 @@
     }
   }
   .course-image {
-    width: 100%;
-    height: auto;
-    background-color: #ddd;
+    
+    
     margin-bottom: 20px;
+    text-align: center;
+    margin-top: 20px;
+   
+    height: auto;
+    
+
+    img {
+      width: 600px;
+      height: 600px;
+    }
+    
+    
+    
   }
 
 

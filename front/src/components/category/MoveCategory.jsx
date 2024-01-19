@@ -11,7 +11,9 @@ const MoveCategory = () => {
     <div className="movecategory">
       <div className="header">
         <h2 className="cate">{category}</h2>
-        <Selectlecture />
+        <div className="selectbox">
+          <Selectlecture />
+        </div>
       </div>
 
       <hr></hr>

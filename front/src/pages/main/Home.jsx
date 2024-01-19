@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Newlecture from "../components/new/Newlecture";
-import Selectlecture from "../components/category/Select";
 
+import Newlecture from "../../components/new/Newlecture";
+import Selectlecture from "../../components/category/Select";
+import "./main.scss";
 const Home = () => {
   // 선택한 강의 정보 출력 함수
 
@@ -100,8 +101,9 @@ const Home = () => {
       <div className="sel">
         <Selectlecture />
       </div>
-
-      <Newlecture lecture={courses} />
+      <div className="new">
+        <Newlecture lecture={courses} />
+      </div>
     </div>
   );
 };

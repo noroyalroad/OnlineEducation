@@ -13,17 +13,18 @@ import MyOnline from "./pages/MyOnline";
 import Cart from "./pages/Cart";
 import Payment from "./pages/Payment";
 
-import Navbar from "./components/Navbar";
+import Navbar from "./components/nav/Navbar";
 import Footer from "./components/Footer";
 import Resgister1 from "./pages/auth/Resgister1";
 import DetailLeture from "./components/DetailLeture";
 import PaymentPage from "./pages/pay/Pay";
-import Home from "./pages/Home";
+
 import MoveCategory from "./components/category/MoveCategory";
 import Lectureplay from "./pages/playing/Lectureplay";
 import Mainplaying from "./pages/playing/Mainplaying";
 import MyPage from "./pages/mypage/Mypage";
 import Searchre from "./pages/search/Searchre";
+import Home from "./pages/main/Home";
 
 const Layout = () => {
   return (

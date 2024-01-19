@@ -18,7 +18,8 @@ import AdbIcon from "@mui/icons-material/Adb";
 import InputBase from "@mui/material/InputBase";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Login1 from "../pages/auth/Login1";
+import Login1 from "../../pages/auth/Login1";
+import "./nav.scss";
 
 const pages = ["Front", "Back", "DB"];
 const settings = ["내정보", "수강 중인 강의", "Logout"];
@@ -104,8 +105,8 @@ function Navbar() {
   // 네브바 백그라운 색상 흰 색으로 변경
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "peachpuff", boxShadow: "none" }}>
-      <Container maxWidth="xl">
+    <AppBar className="ab" sx={{ backgroundColor: "defalut", boxShadow: "none" }}>
+      <Container>
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
