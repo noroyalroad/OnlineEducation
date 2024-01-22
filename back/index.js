@@ -5,6 +5,12 @@ const test = require("./Router/testRouter");
 const main = require("./Router/mainRouter");
 const auth = require("./Router/authRouter");
 const lecuture = require("./Router/lecturesRouter");
+const cors = require("cors");
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true, // 쿠키 주고받기를 허용
+};
+app.use(cors(corsOptions));
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));

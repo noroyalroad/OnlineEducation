@@ -1,3 +1,4 @@
 /node_modules
 /back/config/dbconfig.json
 /back/config/jwt-key.json
+/back/.env

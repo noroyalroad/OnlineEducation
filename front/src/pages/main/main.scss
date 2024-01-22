@@ -1,6 +1,6 @@
 .home{
    
-  display: flex;
+  
   flex-direction: column;
   
   justify-content: center;
@@ -14,22 +14,6 @@
     width: 40px;
     height: 40px;
     margin-bottom: 20px;
-  }
-
-}
-Footer{
-  
-  padding: 20px;
-  background-color:peachpuff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 12px;
-  
-
-
-  img {
-    height: 50px;
   }
 
 }

@@ -8,11 +8,13 @@ router.use(bodyParser.json());
 const jwt = require("jsonwebtoken");
 const secretObj = require("../config/jwt-key.json");
 const { auth } = require("../middleware/auth");
+const CookieParser = require("cookie-parser");
+router.use(CookieParser());
 
 //회원가입
 router.post("/signup", (req, res) => {
   console.log(req.body);
-  const { UserName, Email, Password, UserCellphone, UserType, Nickname, CheckEmail } = req.body;
+  const { UserName, Email, Password, Nickname } = req.body;
   console.log(Password);
 
   bcrypt.hash(Password, saltRounds, (err, hashpass) => {
@@ -20,14 +22,19 @@ router.post("/signup", (req, res) => {
       console.error(err);
       res.status(500).send("Internal Server Error");
     } else {
-      const sql = "INSERT INTO Users (username, email, password, usercellphone, usertype, nickname, checkemail) VALUES (?, ?, ?, ?, ?, ?, ? )";
-      const values = [UserName, Email, hashpass, UserCellphone, UserType, Nickname, CheckEmail];
+      const sql = "INSERT INTO Users (username, email, password,  nickname) VALUES (?, ?, ?, ? )";
+      const values = [UserName, Email, hashpass, Nickname];
 
       db.query(sql, values, (err, result) => {
         if (err) {
           console.error(err);
           res.status(500).send("Internal Server Error");
-        } else {
+          //닉네임 중복시 에러
+        } else if (result.code === "ER_DUP_ENTRY") {
+          res.status(409).send("중복 된 닉네임입니다.");
+        }
+        // 유저네임 중복시
+        else {
           console.log("Data inserted:", result);
           res.send({ success: true });
         }
@@ -61,6 +68,7 @@ router.post("/login", (req, res) => {
               {
                 email: result[0].Email,
                 nickname: result[0].Nickname,
+                isAuth: true,
               },
               secretObj["secret-key"],
               {
@@ -101,6 +109,13 @@ router.post("/mypage/change", (req, res) => {
       res.send({ success: true });
     }
   });
+});
+
+//로그아웃
+
+router.get("/logout", (req, res) => {
+  res.clearCookie("x_auth");
+  res.send({ success: true });
 });
 
 module.exports = router;

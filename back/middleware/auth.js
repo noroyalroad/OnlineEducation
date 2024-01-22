@@ -15,6 +15,7 @@ exports.auth = (req, res, next) => {
       return res.status(419).json({
         code: 419,
         message: "토큰이 만료되었습니다.",
+        isAuth: false,
       });
     }
     // 토큰의 비밀키가 일치하지 않는 경우
@@ -22,6 +23,7 @@ exports.auth = (req, res, next) => {
       return res.status(401).json({
         code: 401,
         message: "유효하지 않은 토큰입니다.",
+        isAuth: false,
       });
     }
   }

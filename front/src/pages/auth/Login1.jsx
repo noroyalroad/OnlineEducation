@@ -2,12 +2,39 @@ import React, { useState } from "react";
 import "../auth/Modal.scss";
 import kakao from "../../assets/73c891243e7e474e8d81c200967bb14d.jpeg";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+const api = process.env.REACT_APP_SEVER_PORT_AUTH;
 
+const { loginUser } = require("../../_actions/user_action");
 const Login1 = ({ isOpen, onClose }) => {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
+  };
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    let body = {
+      Email: email,
+      Password: password,
+    };
+
+    loginUser(body)
+      .then((res) => {
+        if (res.data.success) {
+          alert("로그인 성공");
+          onClose();
+        } else {
+          alert("로그인 실패");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const nav = useNavigate();
@@ -24,15 +51,27 @@ const Login1 = ({ isOpen, onClose }) => {
             {/* Add your login form components here */}
 
             <div className="login-box">
-              <form className="email-login">
+              <form className="email-login" onSubmit={submitHandler}>
                 <div className="u-form-group">
-                  <input type="email" placeholder="Email" />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                  />
                 </div>
                 <div className="u-form-group">
-                  <input type="password" placeholder="Password" />
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                  />
                 </div>
                 <div className="u-form-group">
-                  <button>Log in</button>
+                  <button type="submit">Log in</button>
                 </div>
                 <div className="u-form-group">
                   <button onClick={() => nav("/register")}>회원가입</button>
