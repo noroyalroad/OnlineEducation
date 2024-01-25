@@ -4,6 +4,8 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Info from "./Info";
+import Toc from "./Toc";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -32,13 +34,14 @@ function a11yProps(index) {
   };
 }
 
-export default function Lecturemenu() {
+export default function Lecturemenu(props) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  console.log(props.props.toc);
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -49,10 +52,10 @@ export default function Lecturemenu() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        강의정보
+        <Info info={props} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        목차
+        <Toc toc={props.props.toc} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         질문하기

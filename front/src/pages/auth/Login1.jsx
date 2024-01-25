@@ -25,15 +25,17 @@ const Login1 = ({ isOpen, onClose }) => {
 
     loginUser(body)
       .then((res) => {
+        console.log(res);
         if (res.data.success) {
           alert("로그인 성공");
-          onClose();
+          window.location.reload();
         } else {
           alert("로그인 실패");
         }
       })
       .catch((err) => {
-        console.error(err);
+        // console.error(err.response);
+        alert(err.response.data.messege);
       });
   };
 

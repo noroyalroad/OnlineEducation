@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import Selectlecture from "./Select";
 import Progress from "../progress/Progress";
 
-const Categorylecture = () => {
+const Categorylecture = ({ pr }) => {
   const nav = useNavigate();
   const courses = [
     {
@@ -98,11 +98,16 @@ const Categorylecture = () => {
   ];
   return (
     <Grid className="gridlecture" container spacing={2}>
-      {courses.map((card, index) => (
+      {pr.map((card, index) => (
         <Grid item key={index} xs={12} sm={6} md={4} lg={3} xl={2}>
           <Card sx={{ maxWidth: 345 }}>
             <CardActionArea>
-              <CardMedia component="img" height="140" image={card.image} alt="green iguana" />
+              <CardMedia
+                component="img"
+                height="140"
+                image="https://storage.googleapis.com/static.fastcampus.co.kr/prod/uploads/2022-06-03T07:41:28Z/2022-06-03T07:41:28Z-472/%E1%84%8B%E1%85%A1%E1%84%8F%E1%85%A1%E1%84%83%E1%85%A6%E1%84%86%E1%85%B5-%E1%84%80%E1%85%B5%E1%86%B7%E1%84%86%E1%85%B5%E1%86%AB%E1%84%90%E1%85%A2.png"
+                alt="green iguana"
+              />
               <CardContent>
                 <Typography variant="body2" component="div">
                   {card.title}
@@ -118,7 +123,7 @@ const Categorylecture = () => {
                 size="small"
                 color="primary"
                 onClick={() => {
-                  nav("/detailleture");
+                  nav(`/detail/${card.LectureID}`);
                 }}
               >
                 Learn

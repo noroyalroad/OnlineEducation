@@ -25,6 +25,8 @@ import Mainplaying from "./pages/playing/Mainplaying";
 import MyPage from "./pages/mypage/Mypage";
 import Searchre from "./pages/search/Searchre";
 import Home from "./pages/main/Home";
+import Testcp from "./components/Testcp";
+import Detail from "./pages/detail/Detail";
 
 const Layout = () => {
   return (
@@ -83,8 +85,8 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "/detailleture",
-        element: <DetailLeture />,
+        path: "/detail/:id",
+        element: <Detail />,
       },
       {
         path: "/myonline",
@@ -93,6 +95,10 @@ const router = createBrowserRouter([
       {
         path: "/cart",
         element: <Cart />,
+      },
+      {
+        path: "/cate/:xp",
+        element: <Testcp />,
       },
       {
         path: "/payment",

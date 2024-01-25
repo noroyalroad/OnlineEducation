@@ -13,6 +13,8 @@ $textColor: #333;           // 텍스트 색상
   color: $textColor;
   text-align: left;
   margin-top: 30px;
+  // height: calc(100vh - 15px);
+
 
   h1 {
     color: $primaryColor;
@@ -50,6 +52,7 @@ $textColor: #333;           // 텍스트 색상
     
     padding: 15px;
     border-radius: 5px;
+    height: calc(45vh);
 
     h2 {
       color: black;

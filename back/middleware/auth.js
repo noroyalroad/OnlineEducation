@@ -2,11 +2,19 @@ const jwt = require("jsonwebtoken");
 const secretObj = require("../config/jwt-key.json");
 
 exports.auth = (req, res, next) => {
+  const token = req.cookies.x_auth;
   // 인증 완료
+
   try {
     // 요청 헤더에 저장된 토큰(req.headers.authorization)과 비밀키를 사용하여 토큰을 req.decoded에 반환
-    req.decoded = jwt.verify(req.headers.authorization, secretObj["secret-key"]);
-    console.log(req.decoded);
+
+    if (!token)
+      return res.json({
+        message: "노인증.",
+        isAuth: false,
+      });
+
+    req.decoded = jwt.verify(token, secretObj["secret-key"]);
     return next();
   } catch (error) {
     // 인증 실패

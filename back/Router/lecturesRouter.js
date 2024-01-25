@@ -38,7 +38,7 @@ router.get("/course", async (req, res) => {
 
 router.get("/detail/:id", async (req, res) => {
   console.log(req.params.id);
-  const info = `SELECT l.description, i.InstructorID, i.InstructorName, i.Email, i.Qualifications
+  const info = `SELECT l.*, i.InstructorID, i.InstructorName, i.Email, i.Qualifications
   FROM Lectures l
   JOIN Instructor i ON l.InstructorID = i.InstructorID
   WHERE l.LECTUREID = ${req.params.id}; `;

@@ -16,3 +16,23 @@ export const registerUser = (dataToSubmit) => {
 
   return request;
 };
+
+export const logoutUser = () => {
+  const request = axios
+    .get(`${api}/logout`, {
+      withCredentials: true,
+    })
+    .then((response) => response.data);
+
+  return request;
+};
+
+export const auth = () => {
+  const request = axios
+    .get(`${api}/userinfo`, {
+      withCredentials: true,
+    })
+    .then((response) => response.data);
+
+  return request;
+};

@@ -1,48 +1,99 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../auth/register.scss";
 import axios from "axios";
+import Alert from "@mui/material/Alert";
+
 const { registerUser } = require("../../_actions/user_action");
 
 const Resgister1 = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [nickname, setNickname] = useState("");
+  const [form, setform] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    nickname: "",
+  });
 
-  const api = process.env.REACT_APP_SEVER_PORT_AUTH;
+  const [isValidate, setIsValidate] = useState({
+    username: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+    nickname: false,
+  });
+
+  const usernameHandler = (e) => {
+    e.preventDefault();
+    const username = e.target.value;
+    setform({ ...form, username: e.target.value });
+  };
+
+  const nameisValid = () => {
+    const isValid = /([^가-힣\x20])/i.test(form.username);
+    const isValid2 = /^[a-zA-Z0-9]+$/.test(form.username);
+    const isValidlength = form.username.length >= 2 && form.username.length <= 10;
+    const containsSpace = form.username.includes(" "); // !containsSpace
+    const containsSpecial = /[~!@#$%^&*()_+|<>?:{}]/.test(form.username);
+
+    console.log(!isValid, !isValid2, isValidlength, !containsSpace, !containsSpecial);
+
+    const namecheck = !isValid && !isValid2 && isValidlength && !containsSpace && !containsSpecial;
+
+    setIsValidate({ ...isValidate, username: namecheck });
+  };
+
+  const emailisValid = () => {
+    const isValid = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i.test(form.email);
+
+    setIsValidate({ ...isValidate, email: isValid });
+  };
+
+  const nicknameisValid = () => {
+    const isValid = /^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z]{2,10}$/.test(form.nickname);
+
+    console.log(isValid);
+
+    setIsValidate({ ...isValidate, nickname: isValid });
+  };
+
+  const passwordisValid = () => {
+    const isValid = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/.test(form.password);
+
+    setIsValidate({ ...isValidate, password: isValid });
+  };
+
+  const confirmPasswordisValid = () => {
+    const isValid = form.password === form.confirmPassword;
+
+    setIsValidate({ ...isValidate, confirmPassword: isValid });
+  };
 
   //유효성 검사
 
   const submitHandler = (e) => {
     e.preventDefault();
 
-    // 유저네임 유효성 검사
-    if (username.length < 3) {
-      alert("유저네임은 3글자 이상이어야 합니다.");
-      return;
-    }
-    //
-    if (password !== confirmPassword) {
-      return alert("비밀번호가 일치하지 않습니다.");
-    }
-
     let body = {
-      UserName: username,
-      Email: email,
-      Nickname: nickname,
-      Password: password,
+      UserName: form.username,
+      Email: form.email,
+      Nickname: form.nickname,
+      Password: form.password,
     };
 
-    registerUser(body)
-      .then((res) => {
-        if (res.data.success) {
-          alert("회원가입 성공");
-        } else {
-          alert("회원가입 실패");
-        }
-      })
-      .catch((err) => [console.error(err)]);
+    if (Object.values(isValidate).every((v) => v === true)) {
+      console.log("!!");
+      // registerUser(body)
+      //   .then((res) => {
+      //     if (res.data.success) {
+      //       alert("회원가입 성공");
+      //     } else {
+      //       alert("회원가입 실패");
+      //     }
+      //   })
+      //   .catch((err) => [console.error(err)]);
+    } else {
+      alert("형식에 맞게 입력해주세요.");
+    }
   };
 
   return (
@@ -50,16 +101,8 @@ const Resgister1 = () => {
       <form onSubmit={submitHandler}>
         <div className="form-group">
           <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
-            }}
-            required
-          />
+          <input type="text" id="username" name="username" value={form.username} onChange={usernameHandler} onBlur={nameisValid} required />
+          {!isValidate.username && <Alert severity="error">자음, 모음, 특수기호 공백 포함 및 영문으로 된 이름은 사용할 수 없으며 실명을 입력해주세요, 2자 이상 10자 이하로 입력해주세요.</Alert>}
         </div>
         <div className="form-group">
           <label htmlFor="email">Email:</label>
@@ -67,12 +110,14 @@ const Resgister1 = () => {
             type="email"
             id="email"
             name="email"
-            value={email}
+            value={form.email}
             onChange={(e) => {
-              setEmail(e.target.value);
+              setform({ ...form, email: e.target.value });
             }}
+            onBlur={emailisValid}
             required
           />
+          {!isValidate.email && <Alert severity="error">이메일 형식에 맞게 입력해주세요.</Alert>}
         </div>
         <div className="form-group">
           <label htmlFor="nickname">nickname:</label>
@@ -80,12 +125,14 @@ const Resgister1 = () => {
             type="text"
             id="text"
             name="text"
-            value={nickname}
+            value={form.nickname}
             onChange={(e) => {
-              setNickname(e.target.value);
+              setform({ ...form, nickname: e.target.value });
             }}
+            onBlur={nicknameisValid}
             required
           />
+          {!isValidate.nickname && <Alert severity="error">닉네임은 2자 이상 10자 이하로 입력해주세요.</Alert>}
         </div>
         <div className="form-group">
           <label htmlFor="password">Password:</label>
@@ -93,12 +140,14 @@ const Resgister1 = () => {
             type="password"
             id="password"
             name="password"
-            value={password}
+            value={form.password}
             onChange={(e) => {
-              setPassword(e.target.value);
+              setform({ ...form, password: e.target.value });
             }}
+            onBlur={passwordisValid}
             required
           />
+          {!isValidate.password && <Alert severity="error">비밀번호는 영문, 숫자, 특수문자를 포함한 8자 이상 16자 이하로 입력해주세요.</Alert>}
         </div>
         <div className="form-group">
           <label htmlFor="confirmPassword">Confirm Password:</label>
@@ -106,12 +155,14 @@ const Resgister1 = () => {
             type="password"
             id="confirmPassword"
             name="confirmPassword"
-            value={confirmPassword}
+            value={form.confirmPassword}
             onChange={(e) => {
-              setConfirmPassword(e.target.value);
+              setform({ ...form, confirmPassword: e.target.value });
             }}
+            onBlur={confirmPasswordisValid}
             required
           />
+          {!isValidate.confirmPassword && <Alert severity="error">비밀번호가 일치하지 않습니다.</Alert>}
         </div>
         <div className="form-group">
           <button type="submit">Sign Up</button>

@@ -39,7 +39,14 @@ router.get("/hotlist", (req, res) => {
 router.get("/search", async (req, res) => {
   console.log(req.query);
   let search = req.query.title;
-  let sql = `SELECT * FROM Lectures WHERE title LIKE '%${search}%' ORDER BY LectureID DESC`;
+  let sql = `SELECT *
+  FROM Lectures
+  WHERE LOWER(title) LIKE LOWER('${search}%')
+     OR CategoryID IN (
+        SELECT CategoryID
+        FROM Category
+        WHERE LOWER(CategoryName) LIKE LOWER('%${search}%')
+     );`;
   db.query(sql, (err, result) => {
     if (err) {
       console.log(err);
@@ -53,10 +60,33 @@ router.get("/search", async (req, res) => {
 
 //category
 
-router.get("/category", async (req, res) => {
-  console.log(req.query);
-  let category = req.query.categoryid;
-  let sql = ` SELECT * FROM Lectures WHERE CATEGORYID = '${category}' OR CATEGORYID2 = '${category}' OR CATEGORYID3 = '${category}'; `;
+router.get("/category/:category", async (req, res) => {
+  console.log(req.params.category);
+  console.log(typeof req.query.order);
+  let category = req.params.category;
+
+  let sqq;
+  let sql = `SELECT *
+  FROM Lectures
+  WHERE CategoryID = (
+      SELECT CategoryID
+      FROM Category
+      WHERE CategoryName = '${category}'
+  ) ORDER BY LectureID DESC ; `;
+
+  let sqlpopular = `SELECT l.*, COUNT(p.PayID) as TotalPayments
+  FROM Lectures l
+  LEFT JOIN pay p ON l.LectureID = p.LectureID
+  WHERE l.CategoryID = (
+      SELECT CategoryID
+      FROM Category
+      WHERE CategoryName = '${category}'
+  )
+  GROUP BY l.LectureID
+  ORDER BY TotalPayments DESC, l.LectureID`;
+
+  req.query.order === "0" ? (sql = sqlpopular) : (sql = sql);
+
   db.query(sql, (err, result) => {
     if (err) {
       console.log(err);

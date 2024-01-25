@@ -2,17 +2,19 @@ import React from "react";
 import "./detaillecture.scss";
 
 import { useNavigate } from "react-router-dom";
-import Lecturemenu from "./Letcuremenu";
+
 import Button from "@mui/material/Button";
+import Lecturemenu from "./lecturemenu/Letcuremenu";
 
 // front/src/components/detaillecture.scss
 
 const DetailLeture = ({ lecture }) => {
   const nav = useNavigate();
+  console.log(lecture);
   return (
     <div className="course-detail">
       <div className="header">
-        <h2 className="lecturetitle">한 번에 끝내는 프론트엔드 개발 초격차 패키지 Online.</h2>
+        <h2 className="lecturetitle">{lecture.info[0].title}</h2>
         <Button className="apply-button" variant="contained" onClick={() => nav("/payment")}>
           수강신청
         </Button>
@@ -27,7 +29,7 @@ const DetailLeture = ({ lecture }) => {
 
       <div className="course-info"></div>
 
-      <Lecturemenu />
+      <Lecturemenu props={lecture} />
     </div>
   );
 };
