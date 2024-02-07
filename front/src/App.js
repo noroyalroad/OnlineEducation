@@ -11,7 +11,6 @@ import OnlineStudy from "./pages/OnlineStudy";
 import Profile from "./pages/Profile";
 import MyOnline from "./pages/MyOnline";
 import Cart from "./pages/Cart";
-import Payment from "./pages/Payment";
 
 import Navbar from "./components/nav/Navbar";
 import Footer from "./components/Footer";
@@ -27,6 +26,9 @@ import Searchre from "./pages/search/Searchre";
 import Home from "./pages/main/Home";
 import Testcp from "./components/Testcp";
 import Detail from "./pages/detail/Detail";
+import Payment from "./pages/pay/Payment";
+import Kakao from "./pages/auth/Kakao";
+import Google from "./pages/auth/Google";
 
 const Layout = () => {
   return (
@@ -72,6 +74,10 @@ const router = createBrowserRouter([
         element: <Searchre />,
       },
       {
+        path: "/payment",
+        element: <Payment />,
+      },
+      {
         path: "/category/:category",
         element: <MoveCategory />,
       },
@@ -101,8 +107,16 @@ const router = createBrowserRouter([
         element: <Testcp />,
       },
       {
-        path: "/payment",
+        path: "/payments",
         element: <PaymentPage />,
+      },
+      {
+        path: "/kakao",
+        element: <Kakao />,
+      },
+      {
+        path: "/google",
+        element: <Google />,
       },
     ],
   },

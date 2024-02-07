@@ -7,6 +7,7 @@ const Lectureplay = () => {
         <source src={vd} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
+      <div>강의 자료, 및 강의 대한 설명이 들어감 </div>
     </div>
   );
 };

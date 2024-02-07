@@ -10,11 +10,14 @@
   }
 
   .content-container{
-    width: auto;
+    
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 150px;
+    gap: 10px;
+    .tc{
+      margin-right: 30px;
+    }
   }
 
 

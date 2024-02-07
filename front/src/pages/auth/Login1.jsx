@@ -3,6 +3,9 @@ import "../auth/Modal.scss";
 import kakao from "../../assets/73c891243e7e474e8d81c200967bb14d.jpeg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import Kakao from "./Kakao";
+import Google from "./Google";
 const api = process.env.REACT_APP_SEVER_PORT_AUTH;
 
 const { loginUser } = require("../../_actions/user_action");
@@ -15,6 +18,7 @@ const Login1 = ({ isOpen, onClose }) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -23,10 +27,10 @@ const Login1 = ({ isOpen, onClose }) => {
       Password: password,
     };
 
-    loginUser(body)
+    dispatch(loginUser(body))
       .then((res) => {
         console.log(res);
-        if (res.data.success) {
+        if (res.payload.data.success) {
           alert("로그인 성공");
           window.location.reload();
         } else {
@@ -79,9 +83,11 @@ const Login1 = ({ isOpen, onClose }) => {
                   <button onClick={() => nav("/register")}>회원가입</button>
                 </div>
                 <div className="kako">
-                  <button>
+                  {/* <button>
                     <img src={kakao} alt="kakao" />
-                  </button>
+                  </button> */}
+                  <Kakao />
+                  <Google />
                 </div>
 
                 <div className="u-form-group">

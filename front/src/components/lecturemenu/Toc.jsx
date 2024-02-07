@@ -1,9 +1,29 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./lecturemenu.scss";
 import { BsPlayFill } from "react-icons/bs";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getPayment } from "../../_actions/lecture_action";
+const api = process.env.REACT_APP_SEVER_PORT_MAIN;
 
 const Toc = ({ toc }) => {
-  console.log(toc);
+  const { id } = useParams();
+  const pay = useSelector((state) => state.user);
+  const payst = pay.userData?.userId;
+
+  const [clickst, setclickst] = useState("N");
+
+  useEffect(() => {
+    getPayment(api, id, payst)
+      .then((res) => {
+        setclickst(res.PAYMENTSTATUS);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const nav = useNavigate();
   const SampleVideos = [
     { title: "비디오 1", url: "https://www.example.com/video1" },
     { title: "비디오 2", url: "https://www.example.com/video2" },
@@ -11,6 +31,12 @@ const Toc = ({ toc }) => {
     { title: "비디오 4", url: "https://www.example.com/video4" },
     { title: "비디오 5", url: "https://www.example.com/video5" },
   ];
+
+  const handleClick = (video, index) => {
+    if (clickst === "N" && index >= 3) return;
+    console.log(video.TOCID, video.title);
+    nav("/playlecture", { state: { toc: toc, title: video.title } });
+  };
   return (
     <div>
       <div className="video-table">
@@ -25,18 +51,15 @@ const Toc = ({ toc }) => {
           </thead>
           <tbody>
             {toc.map((video, index) => (
-              <tr
-                key={index}
-                onClick={() => {
-                  console.log(video.TOCID, video.title);
-                }}
-              >
+              <tr key={index} onClick={() => handleClick(video, index)} className={clickst === "N" && index >= 3 ? "disabled" : ""}>
                 <td>{video.title}</td>
                 <td></td>
                 <td>
-                  <a href={video.url} target="_blank" rel="noopener noreferrer">
-                    <BsPlayFill className="play-icon" />
-                  </a>
+                  {(clickst === "Y" || index < 3) && (
+                    <a href={video.url} target="_blank" rel="noopener noreferrer">
+                      <BsPlayFill className="play-icon" />
+                    </a>
+                  )}
                 </td>
               </tr>
             ))}

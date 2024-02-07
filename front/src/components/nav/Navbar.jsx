@@ -22,6 +22,7 @@ import Login1 from "../../pages/auth/Login1";
 import "./nav.scss";
 import { logoutUser, auth } from "../../_actions/user_action";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const pages = ["Front", "Back", "DB"];
 const settings = ["내정보", "수강 중인 강의", "Logout"];
@@ -72,9 +73,15 @@ function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [user, setUser] = useState(null);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    auth().then((res) => {
-      setUser(res);
+    // auth().then((res) => {
+    //   setUser(res);
+    // });
+    dispatch(auth()).then((res) => {
+      setUser(res.payload);
+      console.log(res);
     });
   }, []);
 
@@ -223,7 +230,7 @@ function Navbar() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt="Remy Sharp" src={`http://localhost:4000/api/auth/profileimage/1706666518228_73c891243e7e474e8d81c200967bb14d.jpeg`} />
                 </IconButton>
               </Tooltip>
               <Menu

@@ -98,7 +98,7 @@ const Categorylecture = ({ pr }) => {
   ];
   return (
     <Grid className="gridlecture" container spacing={2}>
-      {pr.map((card, index) => (
+      {pr?.map((card, index) => (
         <Grid item key={index} xs={12} sm={6} md={4} lg={3} xl={2}>
           <Card sx={{ maxWidth: 345 }}>
             <CardActionArea>

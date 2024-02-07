@@ -3,8 +3,9 @@
   flex-direction: column;
   
   // justify-content: space-between;
-  margin-top:100px ;
+  margin-top : 30px;
   width: 1240px; // 추가된 부분
+  margin: 0 auto;
   
 
   .header {
@@ -12,7 +13,7 @@
     align-items: center;
     justify-content: space-between;
     
-    margin-bottom: 20px;
+    
     .lecturetitle {
       font-size: 24px;
       margin-right: 10px;

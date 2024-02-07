@@ -3,6 +3,7 @@ const secretObj = require("../config/jwt-key.json");
 
 exports.auth = (req, res, next) => {
   const token = req.cookies.x_auth;
+  console.log("요청!!!", token);
   // 인증 완료
 
   try {
@@ -20,7 +21,7 @@ exports.auth = (req, res, next) => {
     // 인증 실패
     // 유효시간이 초과된 경우
     if (error.name === "TokenExpiredError") {
-      return res.status(419).json({
+      return res.json({
         code: 419,
         message: "토큰이 만료되었습니다.",
         isAuth: false,
