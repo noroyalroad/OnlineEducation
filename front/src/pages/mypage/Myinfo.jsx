@@ -9,24 +9,30 @@ import { useDispatch, useSelector } from "react-redux";
 const Myinfo = ({ info }) => {
   const selefile = useRef();
 
-  console.log(info);
-
   const user = useSelector((state) => state.user.userData);
+
+  const name = user?.name;
+  console.log(name);
   const [img, setImg] = useState(null);
-  const [imgpath, setImgpath] = useState(`http://localhost:4000/api/auth/${info?.profileimage}`);
-  console.log(user);
-  console.log(imgpath);
+
   console.log(img);
 
   const [userinfo, setuserinfo] = useState({
-    name: info?.name,
-    nickname: info?.nickname,
-    bio: info?.bio,
-    UserId: info?.userId,
+    name: user?.name,
+    nickname: user?.nickname,
+    imgpath: user?.profile_image,
+    bio: user?.bio,
   });
   const dispath = useDispatch();
 
-  console.log(userinfo.name);
+  useEffect(() => {
+    setuserinfo({
+      name: user?.name,
+      nickname: user?.nickname,
+      imgpath: user?.profile_image,
+      bio: user?.bio,
+    });
+  }, [user]);
 
   const handleUserInfoChange = (field, value) => {
     setuserinfo((prevUserInfo) => ({
@@ -45,18 +51,20 @@ const Myinfo = ({ info }) => {
       data.append(key, userinfo[key]);
     }
     data.append("img", img);
+    data.append("userId", user?.userId);
 
     change(data)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
 
         dispath(auth()).then((response) => {
-          console.log(response);
+          window.location.reload();
         });
       })
       .catch((err) => {
         console.error(err);
-      });
+      })
+      .then((res) => {});
 
     console.log(data.get("img"));
     console.log(data.get("name"));
@@ -66,7 +74,8 @@ const Myinfo = ({ info }) => {
   return (
     <>
       <div className="user-info">
-        <Avatar alt="Remy Sharp" src={imgpath ? imgpath : ava} sx={{ width: 100, height: 100 }} onClick={() => selefile.current.click()} />
+        <Avatar alt="Remy Sharp" src={userinfo.imgpath ? userinfo?.imgpath : ava} sx={{ width: 100, height: 100 }} onClick={() => selefile.current.click()} />
+        {/* <Avatar alt="Remy Sharp" src={`http://localhost:4000/api/auth/${user?.profile_image}`} /> */}
         <input
           type="file"
           ref={selefile}
@@ -74,11 +83,13 @@ const Myinfo = ({ info }) => {
           onChange={(e) => {
             console.log(e.target.files[0]);
             setImg(e.target.files[0]);
+            setuserinfo({ ...userinfo, imgpath: e.target.files[0] });
 
             const reader = new FileReader();
             reader.readAsDataURL(e.target.files[0]);
             reader.onload = () => {
-              setImgpath(reader.result);
+              // setImgpath(reader.result);
+              setuserinfo({ ...userinfo, imgpath: reader.result });
             };
           }}
         />

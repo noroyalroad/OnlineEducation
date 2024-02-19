@@ -10,7 +10,9 @@ const Google = () => {
     Cookies.set("x_auth", response.credential);
 
     google().then((res) => {
-      console.log(res);
+      if (res.success) {
+        window.location.reload();
+      }
     });
   };
 

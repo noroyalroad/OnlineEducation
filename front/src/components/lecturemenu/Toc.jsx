@@ -24,18 +24,11 @@ const Toc = ({ toc }) => {
   }, []);
 
   const nav = useNavigate();
-  const SampleVideos = [
-    { title: "비디오 1", url: "https://www.example.com/video1" },
-    { title: "비디오 2", url: "https://www.example.com/video2" },
-    { title: "비디오 3", url: "https://www.example.com/video3" },
-    { title: "비디오 4", url: "https://www.example.com/video4" },
-    { title: "비디오 5", url: "https://www.example.com/video5" },
-  ];
 
   const handleClick = (video, index) => {
     if (clickst === "N" && index >= 3) return;
     console.log(video.TOCID, video.title);
-    nav("/playlecture", { state: { toc: toc, title: video.title } });
+    nav("/playlecture", { state: { toc: toc, title: video.title, tocid: video.TOCID, lectureid: video.LectureID } });
   };
   return (
     <div>

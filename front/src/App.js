@@ -29,6 +29,7 @@ import Detail from "./pages/detail/Detail";
 import Payment from "./pages/pay/Payment";
 import Kakao from "./pages/auth/Kakao";
 import Google from "./pages/auth/Google";
+import Emailcheck from "./pages/auth/Emailcheck";
 
 const Layout = () => {
   return (
@@ -117,6 +118,10 @@ const router = createBrowserRouter([
       {
         path: "/google",
         element: <Google />,
+      },
+      {
+        path: "/emailcheck",
+        element: <Emailcheck />,
       },
     ],
   },

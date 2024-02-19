@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import "../auth/register.scss";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
 
-const { registerUser } = require("../../_actions/user_action");
+const { registerUser, uniquenickname, uniqueemail } = require("../../_actions/user_action");
 
 const Resgister1 = () => {
   const [form, setform] = useState({
@@ -20,6 +21,11 @@ const Resgister1 = () => {
     password: false,
     confirmPassword: false,
     nickname: false,
+  });
+
+  const [isUnique, setIsUnique] = useState({
+    email: true,
+    nickname: true,
   });
 
   const usernameHandler = (e) => {
@@ -46,6 +52,10 @@ const Resgister1 = () => {
     const isValid = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i.test(form.email);
 
     setIsValidate({ ...isValidate, email: isValid });
+    uniqueemail({ Email: form.email }).then((res) => {
+      console.log(res);
+      setIsUnique({ ...isUnique, email: res.success });
+    });
   };
 
   const nicknameisValid = () => {
@@ -54,6 +64,12 @@ const Resgister1 = () => {
     console.log(isValid);
 
     setIsValidate({ ...isValidate, nickname: isValid });
+    uniquenickname({ Nickname: form.nickname }).then((res) => {
+      console.log(res);
+      setIsUnique({ ...isUnique, nickname: res.success });
+    });
+
+    console.log(isUnique.nickname);
   };
 
   const passwordisValid = () => {
@@ -69,7 +85,7 @@ const Resgister1 = () => {
   };
 
   //유효성 검사
-
+  const nav = useNavigate();
   const submitHandler = (e) => {
     e.preventDefault();
 
@@ -80,17 +96,18 @@ const Resgister1 = () => {
       Password: form.password,
     };
 
-    if (Object.values(isValidate).every((v) => v === true)) {
+    if (Object.values(isValidate).every((v) => v === true) && Object.values(isUnique).every((v) => v === true)) {
       console.log("!!");
-      // registerUser(body)
-      //   .then((res) => {
-      //     if (res.data.success) {
-      //       alert("회원가입 성공");
-      //     } else {
-      //       alert("회원가입 실패");
-      //     }
-      //   })
-      //   .catch((err) => [console.error(err)]);
+
+      registerUser(body)
+        .then((res) => {
+          if (res.success) {
+            nav("/emailcheck", { state: { email: form.email, name: form.username } });
+          } else {
+            alert("회원가입 실패");
+          }
+        })
+        .catch((err) => [console.error(err)]);
     } else {
       alert("형식에 맞게 입력해주세요.");
     }
@@ -118,6 +135,7 @@ const Resgister1 = () => {
             required
           />
           {!isValidate.email && <Alert severity="error">이메일 형식에 맞게 입력해주세요.</Alert>}
+          {!isUnique && <Alert severity="error">이미 사용중인 이메일입니다.</Alert>}
         </div>
         <div className="form-group">
           <label htmlFor="nickname">nickname:</label>

@@ -1,5 +1,7 @@
 import axios from "axios";
+import { QUESTIONLIST } from "./types";
 const API = process.env.REACT_APP_SEVER_PORT_MAIN;
+
 // 카테고리별 강의
 export const getLecture = (api, category, menu) => {
   const request = axios.get(`${api}/category/${category}/?order=${menu}`).then((res) => res.data);
@@ -77,5 +79,68 @@ export const paymentcomplete = (data) => {
 export const getMyOnline = (id) => {
   const request = axios.get(`${API}/lectures/course/?UserID=${id}`).then((res) => res.data);
 
+  return request;
+};
+
+export const watchtime = (data) => {
+  const request = axios.post(`${API}/lectures/watchtime`, data).then((res) => res.data);
+  return request;
+};
+
+// 질문 작성
+
+export const addquestion = (data) => {
+  const request = axios.post(`${API}/lectures/question`, data).then((res) => res.data);
+  return request;
+};
+
+// 질문 조회
+
+export const getQuestion = (lectureId, tocId) => {
+  const request = axios
+    .get(`${API}/lectures/question`, {
+      params: {
+        lectureId: lectureId,
+        tocId: tocId,
+      },
+    })
+    .then((res) => res.data);
+  return {
+    type: QUESTIONLIST,
+    payload: request,
+  };
+};
+
+//리뷰 작성
+
+export const addreview = (data) => {
+  const request = axios.post(`${API}/lectures/review`, data).then((res) => res.data);
+  return request;
+};
+
+//리뷰 조회
+
+export const getReview = (lectureId) => {
+  const request = axios.get(`${API}/lectures/review/?lectureId=${lectureId}`).then((res) => res.data);
+  return request;
+};
+
+//리뷰 수정
+
+export const updateReview = (data) => {
+  const request = axios.post(`${API}/lectures/review/edit`, data).then((res) => res.data);
+  return request;
+};
+
+//리뷰삭제
+export const deleteReview = (data) => {
+  const request = axios.post(`${API}/lectures/review/delete`, data).then((res) => res.data);
+  return request;
+};
+
+//질문 수정
+
+export const updateQuestion = (data) => {
+  const request = axios.post(`${API}/lectures/question/edit`, data).then((res) => res.data);
   return request;
 };

@@ -14,8 +14,10 @@ const generateToken = () => {
   return { token, expires };
 };
 
-const sendmail = (email, name, message) => {
+const sendmail = (email, message) => {
   const result = generateToken();
+
+  if (!message) message = "메일 인증을 위한 링크입니다.";
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -27,11 +29,11 @@ const sendmail = (email, name, message) => {
   const mailOptions = {
     from: USERMAIL,
     to: email,
-    subject: `Message from ${name}`,
-    text: message,
+    subject: `Message from 런럭스`,
     html: `
     <h3>메일 인증을 위해 아래 링크를 클릭해주세요.</h3>
-    <h4>${message}</h4>
+    <p>${message}</p>
+    <br/>
     <a href="http://localhost:4000/api/mail/check/?email=${email}&token=${result.token}">Click here to go to the website</a>
     <p>Expires at ${result.expires}</p>
     <p><a href="http://localhost:4000/api/mail/resend/?email=${email}">재전송</a></p>`,
@@ -58,15 +60,16 @@ const sendmail = (email, name, message) => {
 };
 
 router.post("/", (req, res) => {
-  const { email, name, message } = req.body;
+  const { email } = req.body;
+  // console.log(email);
 
-  sendmail(email, name, message);
+  sendmail(email);
 
-  res.send({ success: true, message: "메일을 전송했습니다." });
+  res.send({ success: true, message: "메일을 전송했습니다. 메일함을 확인해주세요" });
 });
 router.get("/resend", (req, res) => {
   const email = req.query.email;
-  sendmail(email, "웹", "재전송 메일입니다.");
+  sendmail(email, "재전송 메일입니다.");
   res.send({ message: "메일을 재전송했습니다." });
 });
 
@@ -74,7 +77,6 @@ router.get("/check", (req, res) => {
   const email = req.query.email;
   const token = req.query.token;
 
-  console.log(email, token);
   const sql = "SELECT * FROM Users WHERE email = ? AND token = ?";
   db.query(sql, [email, token], (err, result) => {
     if (err) {

@@ -57,22 +57,30 @@ router.post("/signup", (req, res) => {
       console.error(err);
       res.status(500).send("Internal Server Error");
     } else {
-      const sql = "INSERT INTO Users (username, email, password,  nickname) VALUES (?, ?, ?, ? )";
-      const values = [UserName, Email, hashpass, Nickname];
+      // const sql = "INSERT INTO Users (username, email, password,  nickname) VALUES (?, ?, ?, ? )";
+      const sql = "select * from Users where email = ? ";
+      const values = [Email];
 
       db.query(sql, values, (err, result) => {
-        console.error("결과", err);
         if (err) {
-          if (err.errno === 1062) {
-            res.status(500).send({ success: false, messege: "중복된 닉네임입니다." });
+          console.error(err);
+          res.status(500).send("Internal Server Error");
+        } else {
+          if (result.length === 0) {
+            const sql = "INSERT INTO Users (username, email, password,  nickname) VALUES (?, ?, ?, ? )";
+            const values = [UserName, Email, hashpass, Nickname];
+            db.query(sql, values, (err, result) => {
+              if (err) {
+                console.error(err);
+                res.status(500).send("Internal Server Error");
+              } else {
+                console.log("Data inserted:", result);
+                res.send({ success: true });
+              }
+            });
+          } else {
+            res.status(500).send({ success: false, messege: "이미 가입된 이메일이거나 닉네임입니다." });
           }
-
-          //닉네임 중복시 에러
-        }
-        // 유저네임 중복시
-        else {
-          console.log("Data inserted:", result);
-          res.send({ success: true });
         }
       });
     }
@@ -100,6 +108,8 @@ router.post("/login", (req, res) => {
             res.status(500).send("Internal Server Error");
           } else if (!compareResult) {
             res.status(401).send({ success: false, messege: "비밀번호가 일치하지 않습니다." });
+          } else if (result[0].checkemail !== "Y") {
+            res.status(401).send({ success: false, messege: "이메일 인증을 완료해주세요." });
           } else {
             const token = jwt.sign(
               {
@@ -182,46 +192,13 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post("/mypage/update", upload.single("img"), auth, (req, res) => {
-  const { name, nickname, bio, UserId } = req.body;
+  const { name, nickname, bio, userId } = req.body;
 
-  const image = req.file.path;
-  if (!image) {
-    const sql = "UPDATE Users SET  username = ?, nickname = ?, bio = ? where UserID = ?";
-    const values = [name, nickname, bio, UserId];
-
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send("Internal Server Error");
-      } else {
-        console.log("Data inserted:", result);
-
-        const token = jwt.sign(
-          {
-            email: req.decoded.email,
-            nickname: nickname,
-            name: name,
-            bio: bio,
-            userId: UserId,
-            profileimage: image,
-            is: true,
-            isAuth: true,
-          },
-          secretObj["secret-key"],
-          {
-            expiresIn: "1h",
-          }
-        );
-        res.cookie("x_auth", token, { path: "/" });
-
-        res.send({ success: true });
-      }
-    });
-    return;
-  }
+  const image = req.file ? "http://localhost:4000/api/auth/" + req.file.path : req.decoded.profile_image;
+  console.log("imgae===>", image);
 
   const sql = "UPDATE Users SET  username = ?, nickname = ?, bio = ? , img_file_path = ? where UserID = ?";
-  const values = [name, nickname, bio, image, UserId];
+  const values = [name, nickname, bio, image, userId];
 
   db.query(sql, values, (err, result) => {
     if (err) {
@@ -236,7 +213,7 @@ router.post("/mypage/update", upload.single("img"), auth, (req, res) => {
           nickname: nickname,
           name: name,
           bio: bio,
-          userId: UserId,
+          userId: userId,
           profile_image: image,
           is: true,
           isAuth: true,
@@ -256,122 +233,147 @@ router.post("/mypage/update", upload.single("img"), auth, (req, res) => {
 // 결제
 router.post("/payment/complete", async (req, res) => {
   try {
-    const { imp_uid, merchant_uid } = req.body;
+    const { imp_uid, merchant_uid, payinfo } = req.body;
     console.log(req.body);
 
-    let body = {
-      imp_key: IMP_KEY,
-      imp_secret: IMP_SECRET,
-    };
+    let sql = `INSERT INTO pay (LECTUREID, userid, PRICE, payments, USERNAME,PHONENUMBER ,EMAIL, Field, merchant_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`;
 
-    const response = await axios.post("https://api.iamport.kr/users/getToken", body, {
-      headers: { "Content-Type": "application/json" },
-    });
-    const token = response.data.response.access_token;
+    const value = [payinfo.lectureID, payinfo.userID, payinfo.price, payinfo.paymentMethod, payinfo.name, payinfo.phoneNumber, payinfo.email, payinfo.accountname, merchant_uid];
 
-    const getPaymentData = await axios.get(`https://api.iamport.kr/payments/${imp_uid}`, {
-      headers: { Authorization: token },
-    });
-
-    console.log("tokennn!!", token);
-
-    const payments = getPaymentData.data;
-
-    console.log("payments", payments);
-
-    const query = "select price from pay where merchant_uid = ? ";
-    const values = [merchant_uid];
-    let price = 0;
-
-    db.query(query, values, (err, result) => {
+    db.query(sql, value, async (err, result) => {
       if (err) {
         console.error(err);
+        return res.status(500).send("Internal Server Error");
+      }
+
+      console.log("Insertion successful");
+
+      try {
+        const response = await axios.post("https://api.iamport.kr/users/getToken", {
+          imp_key: IMP_KEY,
+          imp_secret: IMP_SECRET,
+        });
+
+        const token = response.data.response.access_token;
+
+        const getPaymentData = await axios.get(`https://api.iamport.kr/payments/${imp_uid}`, {
+          headers: { Authorization: token },
+        });
+
+        const payments = getPaymentData.data;
+
+        console.log("Payment details", payments);
+
+        const query = "SELECT price FROM pay WHERE merchant_uid = ? UNION ALL SELECT price FROM Lectures WHERE lectureid = ?";
+        const values = [merchant_uid, payinfo.lectureID];
+
+        db.query(query, values, (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).send("Internal Server Error");
+          }
+
+          console.log("Prices retrieved from database", result);
+
+          if (result[0].price !== payments.response.amount && result[1].price !== payments.response.amount) {
+            switch (payments.response.status) {
+              case "ready":
+                const updateReadyQuery = "UPDATE pay SET status = ? WHERE merchant_uid = ?";
+                const updateReadyValues = ["ready", merchant_uid];
+                db.query(updateReadyQuery, updateReadyValues, (err, result) => {
+                  if (err) {
+                    console.error(err);
+                    return res.status(500).send("Internal Server Error");
+                  }
+                  res.send({ success: true });
+                });
+                break;
+              case "paid":
+                const updatePaidQuery = "UPDATE pay SET paystatus = 'Y' WHERE merchant_uid = ?";
+                const updatePaidValues = [merchant_uid];
+                db.query(updatePaidQuery, updatePaidValues, (err, result) => {
+                  if (err) {
+                    console.error(err);
+                    return res.status(500).send("Internal Server Error");
+                  }
+                  res.send({ success: true, message: "결제 성공" });
+                });
+                break;
+            }
+          } else {
+            res.send({ success: true, message: "결제 금액이 일치하지 않습니다." });
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching payment details:", error);
         res.status(500).send("Internal Server Error");
-      } else {
-        price = result[0].price;
       }
     });
-
-    if (price !== payments.response.amount) {
-      switch (payments.response.status) {
-        case "ready":
-          const query = "update pay set status = ? where merchant_uid = ?";
-          const values = ["ready", merchant_uid];
-          db.query(query, values, (err, result) => {
-            if (err) {
-              console.error(err);
-              res.status(500).send("Internal Server Error");
-            } else {
-              res.send({ success: true });
-            }
-          });
-          break;
-        case "paid":
-          // 결제성공
-          const suceessquery = "update pay set paystatus = 'Y' where merchant_uid = ?";
-          const suceessvalues = [merchant_uid];
-
-          db.query(suceessquery, suceessvalues, (err, result) => {
-            if (err) {
-              console.error(err);
-              res.status(500).send("Internal Server Error");
-            } else {
-              res.send({ success: true, messege: "결제성공" });
-            }
-          });
-
-          break;
-      }
-    }
-
-    // console.log("엑세스 ", getToken.response);
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 //kakaologin
 
 router.post("/kakaologin", (req, res) => {
-  const query = "select * from kakaouser where email = ?";
-  const values = [req.body.email];
+  const query = "select * from Users where email = ? or nickname = ?";
+  const values = [req.body.email, req.body.nickname];
 
   db.query(query, values, (err, result) => {
     if (err) {
       console.error(err);
       res.status(500).send("Internal Server Error");
     } else {
-      console.log("결과", result[0]);
-      if (result.length === 0) {
-        const query = "insert into kakaouser (userid, email, nickname, username, profile_img,password) values (?,?,?,?,?,?)";
-        const values = [req.body.id, req.body.email, req.body.nickname, req.body.nickname, req.body.profile_image, req.body.id];
+      console.log("카카오셀렉결과", result[0]);
+      if (result[0].length === 0) {
+        const query = "insert into Users (email, nickname, username, img_file_path,password, checkemail) values (?,?,?,?,?,?)";
+        const values = [req.body.email, req.body.nickname + req.body.id.toString(), req.body.nickname, req.body.profile_image, req.body.id, "Y"];
         db.query(query, values, (err, result) => {
+          console.log("카카오인서트결과", result);
+
           if (err) {
             console.error(err);
             res.status(500).send("Internal Server Error");
           } else {
-            const token = jwt.sign(
-              {
-                userId: req.body.id,
-                email: req.body.email,
-                nickname: req.body.nickname,
-                profile_image: req.body.profile_image,
-                isAuth: true,
-              },
-              secretObj["secret-key"],
-              {
-                expiresIn: "1h",
+            const query = "select * from Users where email = ?";
+            const values = [req.body.email];
+
+            db.query(query, values, (err, result) => {
+              if (err) {
+                console.error(err);
+                res.status(500).send("Internal Server Error");
+              } else {
+                console.log("결과", result[0]);
+                const token = jwt.sign(
+                  {
+                    userId: result[0].UserId,
+                    email: result[0].Email,
+                    name: result[0].UserName,
+                    nickname: result[0].Nickname,
+                    profile_image: result[0].img_file_path,
+                    isAuth: true,
+                  },
+                  secretObj["secret-key"],
+                  {
+                    expiresIn: "1h",
+                  }
+                );
+                res.cookie("x_auth", token, { path: "/" });
+                res.send({ success: true });
               }
-            );
-            res.cookie("x_auth", token, { path: "/" });
-            res.send({ success: true });
+            });
           }
         });
       } else {
         const token = jwt.sign(
           {
-            userId: result[0].userId,
+            userId: result[0].UserId,
+            name: result[0].UserName,
             email: result[0].email,
-            nickname: result[0].nickname,
-            profile_image: result[0].profile_img,
+            nickname: result[0].Nickname,
+            profile_image: result[0].img_file_path,
             isAuth: true,
           },
           secretObj["secret-key"],
@@ -393,46 +395,61 @@ router.get("/googlelogin", (req, res) => {
 
   const decoded = jwt.decode(token);
 
-  const query = "select * from kakaouser where email = ?";
+  const query = "select * from Users where email = ?";
   const values = [decoded.email];
 
   db.query(query, values, (err, result) => {
+    console.log("구글셀렉결과", result);
     if (err) {
       console.error(err);
       res.status(500).send("Internal Server Error");
     } else {
       if (result.length === 0) {
-        const query = "insert into kakaouser (userid, email, nickname, username, profile_img,password) values (?,?,?,?,?,?)";
-        const values = [decoded.nbf, decoded.email, decoded.name, decoded.name, decoded.picture, decoded.nbf];
+        const query = "insert into Users ( email, nickname, username, img_file_path, password, checkemail) values (?,?,?,?,?,?)";
+        const values = [decoded.email, decoded.name + decoded.nbf.toString(), decoded.name, decoded.picture, decoded.nbf, "Y"];
         db.query(query, values, (err, result) => {
           if (err) {
             console.error(err);
             res.status(500).send("Internal Server Error");
           } else {
-            const token = jwt.sign(
-              {
-                email: decoded.email,
-                nickname: decoded.nickname,
-                profile_image: decoded.picture,
-                userId: decoded.nbf,
-                isAuth: true,
-              },
-              secretObj["secret-key"],
-              {
-                expiresIn: "1h",
+            const query = "select * from Users where email = ?";
+            const values = [decoded.email];
+
+            db.query(query, values, (err, result) => {
+              if (err) {
+                console.error(err);
+                res.status(500).send("Internal Server Error");
+              } else {
+                console.log("결과", result[0]);
+                const token = jwt.sign(
+                  {
+                    userId: result[0].UserId,
+                    email: result[0].Email,
+                    name: result[0].UserName,
+                    nickname: result[0].Nickname,
+                    profile_image: result[0].img_file_path,
+                    isAuth: true,
+                  },
+                  secretObj["secret-key"],
+                  {
+                    expiresIn: "1h",
+                  }
+                );
+                res.cookie("x_auth", token, { path: "/" });
+                res.send({ success: true });
               }
-            );
-            res.cookie("x_auth", token, { path: "/" });
-            res.send({ success: true });
+            });
           }
         });
       } else {
+        console.log("구글로그인======>", result[0]);
         const token = jwt.sign(
           {
-            email: result[0].email,
-            userId: result[0].userid,
-            nickname: result[0].nickname,
-            profile_image: result[0].profile_img,
+            email: result[0].Email,
+            userId: result[0].UserId,
+            name: result[0].UserName,
+            nickname: result[0].Nickname,
+            profile_image: result[0].img_file_path,
             isAuth: true,
           },
           secretObj["secret-key"],
@@ -442,6 +459,51 @@ router.get("/googlelogin", (req, res) => {
         );
         res.cookie("x_auth", token, { path: "/" });
         res.send({ success: true });
+      }
+    }
+  });
+});
+
+// 닉네임 중복체크
+
+router.post("/nicknamecheck", (req, res) => {
+  const { Nickname } = req.body;
+  console.log(req.body);
+  const sql = "select * from Users where nickname = ?";
+  const values = [Nickname];
+
+  db.query(sql, values, (err, result) => {
+    console.log(result);
+    if (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      if (result.length === 0) {
+        res.send({ success: true });
+      } else {
+        res.send({ success: false });
+      }
+    }
+  });
+});
+
+//이메일 중복체크
+
+router.post("/emailcheck", (req, res) => {
+  const { Email } = req.body;
+  console.log(req.body);
+  const sql = "select * from Users where email = ?";
+  const values = [Email];
+  db.query(sql, values, (err, result) => {
+    console;
+    if (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      if (result.length === 0) {
+        res.send({ success: true });
+      } else {
+        res.send({ success: false });
       }
     }
   });

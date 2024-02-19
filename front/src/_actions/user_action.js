@@ -1,6 +1,7 @@
 import axios from "axios";
 import { AUTH_USER, LOGIN_USER } from "./types";
 const api = process.env.REACT_APP_SEVER_PORT_AUTH;
+const apimain = process.env.REACT_APP_SEVER_PORT_MAIN;
 
 export const loginUser = (dataToSubmit) => {
   const request = axios
@@ -59,6 +60,24 @@ export const kakao = (dataToSubmit) => {
 };
 export const google = () => {
   const request = axios.get(`${api}/googlelogin`, { withCredentials: true }).then((response) => response.data);
+
+  return request;
+};
+
+export const emailcheck = (dataToSubmit) => {
+  const request = axios.post(`${apimain}/mail`, dataToSubmit).then((response) => response.data);
+
+  return request;
+};
+
+export const uniquenickname = (dataToSubmit) => {
+  const request = axios.post(`${api}/nicknamecheck`, dataToSubmit).then((response) => response.data);
+
+  return request;
+};
+
+export const uniqueemail = (dataToSubmit) => {
+  const request = axios.post(`${api}/emailcheck`, dataToSubmit).then((response) => response.data);
 
   return request;
 };

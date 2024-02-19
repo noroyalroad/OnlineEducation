@@ -11,7 +11,6 @@ router.get("/", (req, res) => {
       console.log(err);
       res.status(500).send("Internal Server Error");
     } else {
-      console.log("Data retrieved:", rows);
       res.send(rows);
     }
   });
@@ -28,7 +27,6 @@ router.get("/hotlist", (req, res) => {
         console.error(err);
         res.status(500).send("Internal Server Error");
       } else {
-        console.log("Data retrieved:", result);
         res.send(result);
       }
     }
@@ -52,7 +50,6 @@ router.get("/search", async (req, res) => {
       console.log(err);
       res.status(500).send("Internal Server Error");
     } else {
-      console.log("Data retrieved:", result);
       res.send(result);
     }
   });
@@ -92,7 +89,6 @@ router.get("/category/:category", async (req, res) => {
       console.log(err);
       res.status(500).send("Internal Server Error");
     } else {
-      console.log("Data retrieved:", result);
       res.send(result);
     }
   });

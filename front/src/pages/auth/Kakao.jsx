@@ -20,7 +20,9 @@ const Kakao = () => {
     console.log(body);
 
     kakao(body).then((res) => {
-      console.log(res);
+      if (res.success) {
+        window.location.reload();
+      }
     });
     console.log(data);
   };

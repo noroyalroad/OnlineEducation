@@ -6,11 +6,18 @@ import "./play.scss";
 import Toc from "../../components/lecturemenu/Toc";
 import { useLocation } from "react-router-dom";
 import ReviewComponent from "./riview/Riviewlecture";
+import { useSelector } from "react-redux";
 
 const Mainplaying = () => {
   const location = useLocation();
   const toc = location.state?.toc;
   const title = location.state?.title;
+
+  const { tocid, lectureid } = location?.state;
+
+  console.log(tocid, lectureid);
+
+  const user = useSelector((state) => state.user.userData);
 
   return (
     <div className="course-detail">
@@ -20,7 +27,7 @@ const Mainplaying = () => {
       </div>
 
       <div className="content-container">
-        <Lectureplay />
+        <Lectureplay userId={user?.userId} tocId={tocid} lectureId={lectureid} />
 
         <div className="tc">
           <Toc toc={toc} />
@@ -31,7 +38,7 @@ const Mainplaying = () => {
       </div>
 
       <div className="review">
-        <ReviewComponent />
+        <ReviewComponent tocId={tocid} lectureId={lectureid} />
       </div>
     </div>
   );

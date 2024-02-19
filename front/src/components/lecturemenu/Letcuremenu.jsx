@@ -6,6 +6,8 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Info from "./Info";
 import Toc from "./Toc";
+import TopReview from "./riview2/TopReview";
+import HighReview from "./riview2/HighReview";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -42,13 +44,14 @@ export default function Lecturemenu(props) {
   };
 
   console.log(props.props.toc);
+
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} textColor="black" aria-label="basic tabs example">
           <Tab label="강의정보" {...a11yProps(0)} />
           <Tab label="목차" {...a11yProps(1)} />
-          <Tab label="질문하기" {...a11yProps(2)} />
+          <Tab label="리뷰" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -58,7 +61,7 @@ export default function Lecturemenu(props) {
         <Toc toc={props.props.toc} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        질문하기
+        <HighReview lectureId={props.props.info[0].LectureID} />
       </CustomTabPanel>
     </Box>
   );

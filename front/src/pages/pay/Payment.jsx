@@ -57,12 +57,14 @@ const Payment = ({ item, payinfo }) => {
     const bfpay = payinfo;
     bfpay.merchant_uid = data.merchant_uid;
 
-    // IMP.request_pay(data, callback);
-
     paymentbefore(bfpay)
       .then((res) => {
-        console.log(res);
-        IMP.request_pay(data, callback);
+        if (res.success) {
+          IMP.request_pay(data, callback);
+        } else {
+          alert("이미 결제한 강의입니다.");
+          return;
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -76,6 +78,8 @@ const Payment = ({ item, payinfo }) => {
       let body = {
         imp_uid: response.imp_uid,
         merchant_uid: response.merchant_uid,
+        LectureID: payinfo.lectureID,
+        payinfo: payinfo,
       };
 
       paymentcomplete(body).then((res) => {
