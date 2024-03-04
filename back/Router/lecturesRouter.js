@@ -359,6 +359,22 @@ router.get("/review", async (req, res) => {
     }
   });
 });
+// 사용자 리뷰 갯수 제한
+
+router.get("/reviewcount", async (req, res) => {
+  const sql = `SELECT COUNT(*) as cnt FROM Review WHERE UserID = ? and lectureid = ?;`;
+  const values = [req.query.userId, req.query.lectureId];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log(result);
+      res.json(result);
+    }
+  });
+});
 
 //리뷰 수정
 
@@ -410,6 +426,22 @@ router.post("/question/edit", async (req, res) => {
       res.status(500).send("Internal Server Error");
     } else {
       res.send({ success: true });
+    }
+  });
+});
+
+// 수강 여부 확인
+
+router.get("/enroll", async (req, res) => {
+  const sql = `SELECT paystatus FROM pay WHERE UserID = ? AND LectureID = ?;`;
+  const values = [req.query.userId, req.query.lectureId];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      res.json(result.length === 0 ? { paystatus: "N" } : result[0]);
     }
   });
 });

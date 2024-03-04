@@ -3,13 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Avatar, Button, Card, CardContent, CardHeader, TextField } from "@mui/material";
 import ReviewItem from "./Riviewitem";
-import { addquestion, addreview, deleteReview, getReview, updateReview } from "../../../_actions/lecture_action";
+import { addquestion, addreview, checkEnroll, deleteReview, getReview, getReviewCount, updateReview } from "../../../_actions/lecture_action";
 
 const TopReview = ({ lectureId, review, Ques, tocId }) => {
   const user = useSelector((state) => state.user.userData);
   const userimg = user?.profile_image;
 
+  const count = useSelector((state) => state.lecture.checkCount[0]?.cnt);
+
+  const check = useSelector((state) => state.lecture.checkEnroll?.paystatus);
+
   const [edit, setEdit] = useState(false);
+
+  const [Count, setCount] = useState(count);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setReviews(review);
@@ -99,7 +107,7 @@ const TopReview = ({ lectureId, review, Ques, tocId }) => {
     if (Ques) {
       const newReview = {
         username: user?.name,
-        img_file_path: userimg, // 사용자가 지정한 이미지를 사용하거나, 기본 이미지로 대체 가능
+        img_file_path: userimg,
         Ques: newReviewText,
         CreateAt: Date.now(),
       };
@@ -122,9 +130,16 @@ const TopReview = ({ lectureId, review, Ques, tocId }) => {
       setReviews([newReview, ...reviews]);
       setNewReviewText("");
     } else {
+      if (newReviewText.trim() === "") return;
+      if (check === "N" || Count >= 1) {
+        check === "N" ? alert("수강신청 후 리뷰를 작성할 수 있습니다.") : Count >= 1 ? alert("이미 리뷰를 작성하셨습니다.") : alert("수강신청 후 리뷰를 작성할 수 있습니다.");
+
+        setNewReviewText("");
+        return;
+      }
       const newReview = {
         username: user?.name,
-        img_file_path: userimg, // 사용자가 지정한 이미지를 사용하거나, 기본 이미지로 대체 가능
+        img_file_path: userimg,
         Review: newReviewText,
         CreateAt: Date.now(),
       };
@@ -140,6 +155,9 @@ const TopReview = ({ lectureId, review, Ques, tocId }) => {
       addreview(body)
         .then((res) => {
           res.success ? alert("리뷰가 등록 되었습니다.") : alert("작성실패");
+          dispatch(getReviewCount(lectureId, user?.userId)).then((res) => {
+            setCount(res.payload[0].cnt);
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -155,10 +173,7 @@ const TopReview = ({ lectureId, review, Ques, tocId }) => {
       <h1>{Ques ? "질문하기" : "리뷰 작성"}</h1>
       <div className="review-form">
         <Card>
-          <CardHeader
-            avatar={<Avatar src="user3.jpg" />} // 사용자가 지정한 이미지를 사용하거나, 기본 이미지로 대체 가능
-            title={Ques ? "질문하기" : "리뷰 작성"}
-          />
+          <CardHeader avatar={<Avatar src="user3.jpg" />} title={Ques ? "질문하기" : "리뷰 작성"} />
           <CardContent>
             <form onSubmit={handleReviewSubmit}>
               <TextField label={Ques ? "질문 작성" : "리뷰 작성"} variant="outlined" fullWidth multiline value={newReviewText} onChange={(event) => setNewReviewText(event.target.value)} />

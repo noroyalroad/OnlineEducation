@@ -1,5 +1,5 @@
 import axios from "axios";
-import { QUESTIONLIST } from "./types";
+import { CHECKCOUNT, CHECKENROLL, QUESTIONLIST } from "./types";
 const API = process.env.REACT_APP_SEVER_PORT_MAIN;
 
 // 카테고리별 강의
@@ -125,6 +125,17 @@ export const getReview = (lectureId) => {
   return request;
 };
 
+//사용자 리뷰 개수 조회
+
+export const getReviewCount = (lectureId, userId) => {
+  const request = axios.get(`${API}/lectures/reviewcount/?lectureId=${lectureId}&userId=${userId}`).then((res) => res.data);
+
+  return {
+    type: CHECKCOUNT,
+    payload: request,
+  };
+};
+
 //리뷰 수정
 
 export const updateReview = (data) => {
@@ -143,4 +154,13 @@ export const deleteReview = (data) => {
 export const updateQuestion = (data) => {
   const request = axios.post(`${API}/lectures/question/edit`, data).then((res) => res.data);
   return request;
+};
+
+// 수강여부 확인
+export const checkEnroll = (lectureId, userId) => {
+  const request = axios.get(`${API}/lectures/enroll/?lectureId=${lectureId}&userId=${userId}`).then((res) => res.data);
+  return {
+    type: CHECKENROLL,
+    payload: request,
+  };
 };

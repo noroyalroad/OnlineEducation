@@ -33,7 +33,7 @@ const Lectureplay = ({ userId, tocId, lectureId }) => {
           console.log(err);
         });
     }
-  }, [tocId, lectureId]);
+  }, [tocId]);
 
   useEffect(() => {
     if (progress !== 100) {
@@ -97,7 +97,7 @@ const Lectureplay = ({ userId, tocId, lectureId }) => {
       console.log("완료");
     }
     //비디오 전체시간
-  }, [totaltime]);
+  }, [totaltime, currentTime]);
 
   // console.log(totaltime);
   // console.log(progress);

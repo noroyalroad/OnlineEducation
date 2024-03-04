@@ -135,7 +135,7 @@ const Resgister1 = () => {
             required
           />
           {!isValidate.email && <Alert severity="error">이메일 형식에 맞게 입력해주세요.</Alert>}
-          {!isUnique && <Alert severity="error">이미 사용중인 이메일입니다.</Alert>}
+          {!isUnique ? <Alert severity="error">이미 사용중인 이메일입니다.</Alert> : null}
         </div>
         <div className="form-group">
           <label htmlFor="nickname">nickname:</label>

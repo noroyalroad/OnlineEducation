@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Lectureplay from "./Lectureplay";
 import Lecturetoc from "../../components/toc/Lecturetoc";
 import Riviewlecture from "./riview/Riviewlecture";
@@ -6,7 +6,8 @@ import "./play.scss";
 import Toc from "../../components/lecturemenu/Toc";
 import { useLocation } from "react-router-dom";
 import ReviewComponent from "./riview/Riviewlecture";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { checkEnroll } from "../../_actions/lecture_action";
 
 const Mainplaying = () => {
   const location = useLocation();
@@ -18,6 +19,19 @@ const Mainplaying = () => {
   console.log(tocid, lectureid);
 
   const user = useSelector((state) => state.user.userData);
+  const dispatch = useDispatch();
+  const [check, setcheck] = useState("N");
+
+  useEffect(() => {
+    dispatch(checkEnroll(lectureid, user?.userId))
+      .then((res) => {
+        console.log(res);
+        setcheck(res.payload.paystatus);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
 
   return (
     <div className="course-detail">
